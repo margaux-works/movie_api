@@ -14,6 +14,126 @@
       integrate user registration, profile updates, and favorite movie lists
       into their applications.
     </p>
-    <p>More info to come</p>
+    <h2>URL Endpoints</h2>
+    <style>
+      td,
+      th {
+        border-left: 1px solid black;
+        border-top: 1px solid black;
+      }
+      table {
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+      }
+    </style>
+    <table>
+      <tr>
+        <th>Request</th>
+        <th>URL</th>
+        <th>HTTP Method</th>
+        <th>Query Parameters</th>
+        <th>Request Body</th>
+        <th>Response</th>
+      </tr>
+      <tr>
+        <td>Get a list of ALL movies</td>
+        <td>/movies</td>
+        <td>GET</td>
+        <td>n/a</td>
+        <td>None</td>
+        <td>A JSON object holding data about all movies</td>
+      </tr>
+      <tr>
+        <td>Get data about a single movie by its title</td>
+        <td>/movies/:title</td>
+        <td>GET</td>
+        <td>title</td>
+        <td>None</td>
+        <td>
+          A JSON object holding data about a single movie, including a title,
+          description, genre, director and an image URL.
+        </td>
+      </tr>
+      <tr>
+        <td>Get data about a genre by name</td>
+        <td>/movies/genre/:genreName</td>
+        <td>GET</td>
+        <td>genreName</td>
+        <td>None</td>
+        <td>
+          A JSON object holding data about a genre, including genre name and
+          description
+        </td>
+      </tr>
+      <tr>
+        <td>Get data about a director by name</td>
+        <td>/movies/directors/:directorName</td>
+        <td>GET</td>
+        <td>:name</td>
+        <td>None</td>
+        <td>
+          A JSON object holding data about a director, including name, bio and
+          birth year. <br />
+        </td>
+      </tr>
+      <tr>
+        <td>Register a new user</td>
+        <td>/users</td>
+        <td>POST</td>
+        <td>n/a</td>
+        <td>
+          A JSON object holding data about the user who registered. <br />
+          i.e { "name": "Leo", "email": "leodc@gmail.com", "favoriteMovies": []
+          }
+        </td>
+        <td>
+          A JSON object holding data about the user who register, including:
+          name, email, favourite movies amd id. <br />
+        </td>
+      </tr>
+      <tr>
+        <td>Update user's info (username)</td>
+        <td>/users/:userId</td>
+        <td>PUT</td>
+        <td>userID</td>
+        <td>None</td>
+        <td>A JSON object the updated data about the user.</td>
+      </tr>
+      <tr>
+        <td>Add a movie to favourite list</td>
+        <td>users/:userId/favorites/:movieTitle</td>
+        <td>PUT</td>
+        <td>user ID and movieTitle</td>
+        <td>None</td>
+        <td>
+          A text message indicating the movie has been added to the favourite
+          list. <br />
+          `${movieTitle} has been added to user ${id}'s array`
+        </td>
+      </tr>
+      <tr>
+        <td>Remove a movie from favourite list</td>
+        <td>users/:userId/favorites/:movieTitle</td>
+        <td>DELETE</td>
+        <td>userID and movieTitle</td>
+        <td>None</td>
+        <td>
+          A text message indicating the movie has been removed from the
+          favourite list. <br />
+          `${movieTitle} has been removed from user ${id}'s array`
+        </td>
+      </tr>
+      <tr>
+        <td>Deregister existing user</td>
+        <td>/users/:userId</td>
+        <td>DELETE</td>
+        <td>userID</td>
+        <td>None</td>
+        <td>
+          A text message indicating the user has been deregistered. <br />
+          `User ${id} has been deleted`
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
