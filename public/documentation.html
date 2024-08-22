@@ -41,7 +41,7 @@
         <td>GET</td>
         <td>n/a</td>
         <td>None</td>
-        <td>A JSON object holding data about all movies</td>
+        <td>A JSON array holding data about all movies</td>
       </tr>
       <tr>
         <td>Get data about a single movie by its title</td>
@@ -50,30 +50,46 @@
         <td>title</td>
         <td>None</td>
         <td>
-          A JSON object holding data about a single movie, including a title,
-          description, genre, director and an image URL.
+          A JSON object holding data about a single movie, including title,
+          description, genre, director, and image URL.
         </td>
       </tr>
       <tr>
-        <td>Get data about a genre by name</td>
-        <td>/movies/genre/:genreName</td>
+        <td>Get movies by genre</td>
+        <td>/movies/genre/:genreId</td>
         <td>GET</td>
-        <td>genreName</td>
+        <td>genreId</td>
+        <td>None</td>
+        <td>A JSON array of movies that match the specified genre ID.</td>
+      </tr>
+      <tr>
+        <td>Get movies by director</td>
+        <td>/movies/director/:directorId</td>
+        <td>GET</td>
+        <td>directorId</td>
+        <td>None</td>
+        <td>A JSON array of movies directed by the specified director ID.</td>
+      </tr>
+      <tr>
+        <td>Get data about a genre by ID</td>
+        <td>/genres/:genreId</td>
+        <td>GET</td>
+        <td>genreId</td>
         <td>None</td>
         <td>
           A JSON object holding data about a genre, including genre name and
-          description
+          description.
         </td>
       </tr>
       <tr>
-        <td>Get data about a director by name</td>
-        <td>/movies/directors/:directorName</td>
+        <td>Get data about a director by ID</td>
+        <td>/directors/:directorId</td>
         <td>GET</td>
-        <td>:name</td>
+        <td>directorId</td>
         <td>None</td>
         <td>
-          A JSON object holding data about a director, including name, bio and
-          birth year. <br />
+          A JSON object holding data about a director, including name, bio,
+          birthdate, and date of death.
         </td>
       </tr>
       <tr>
@@ -82,56 +98,55 @@
         <td>POST</td>
         <td>n/a</td>
         <td>
-          A JSON object holding data about the user who registered. <br />
-          i.e { "name": "Leo", "email": "leodc@gmail.com", "favoriteMovies": []
-          }
+          A JSON object with user details: { "Name": "Leo", "Email":
+          "leodc@gmail.com", "Birthday": "YYYY-MM-DD", "FavoriteMovies": [] }
         </td>
         <td>
-          A JSON object holding data about the user who register, including:
-          name, email, favourite movies amd id. <br />
+          A JSON object holding data about the registered user, including: Name,
+          Email, Birthday, FavoriteMovies, and ID.
         </td>
       </tr>
       <tr>
-        <td>Update user's info (username)</td>
+        <td>Update user's info</td>
         <td>/users/:userId</td>
         <td>PUT</td>
-        <td>userID</td>
-        <td>None</td>
-        <td>A JSON object the updated data about the user.</td>
+        <td>userId</td>
+        <td>A JSON object with updated user details.</td>
+        <td>A JSON object with the updated user details.</td>
       </tr>
       <tr>
-        <td>Add a movie to favourite list</td>
-        <td>users/:userId/favorites/:movieTitle</td>
+        <td>Add a movie to favorite list</td>
+        <td>/users/:userId/favorites/:movieId</td>
         <td>PUT</td>
-        <td>user ID and movieTitle</td>
+        <td>userId, movieId</td>
         <td>None</td>
         <td>
-          A text message indicating the movie has been added to the favourite
+          A text message indicating the movie has been added to the favorite
           list. <br />
-          `${movieTitle} has been added to user ${id}'s array`
+          `${movieId} has been added to user ${userId}'s favorite list`
         </td>
       </tr>
       <tr>
-        <td>Remove a movie from favourite list</td>
-        <td>users/:userId/favorites/:movieTitle</td>
+        <td>Remove a movie from favorite list</td>
+        <td>/users/:userId/favorites/:movieId</td>
         <td>DELETE</td>
-        <td>userID and movieTitle</td>
+        <td>userId, movieId</td>
         <td>None</td>
         <td>
-          A text message indicating the movie has been removed from the
-          favourite list. <br />
-          `${movieTitle} has been removed from user ${id}'s array`
+          A text message indicating the movie has been removed from the favorite
+          list. <br />
+          `${movieId} has been removed from user ${userId}'s favorite list`
         </td>
       </tr>
       <tr>
         <td>Deregister existing user</td>
         <td>/users/:userId</td>
         <td>DELETE</td>
-        <td>userID</td>
+        <td>userId</td>
         <td>None</td>
         <td>
           A text message indicating the user has been deregistered. <br />
-          `User ${id} has been deleted`
+          `User ${userId} has been deleted`
         </td>
       </tr>
     </table>
