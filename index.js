@@ -1,234 +1,256 @@
 const express = require('express'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid');
-
+  uuid = require('uuid'),
+  mongoose = require('mongoose'),
+  Models = require('./models.js');
+const { Movie, User, Genre, Director } = require('./models');
 const app = express();
 
 app.use(bodyParser.json());
 
-let users = [
-  {
-    id: 1,
-    name: 'Jodie',
-    email: 'jodie66@gmail.com',
-    favoriteMovies: ['Taxi Driver', 'Panic Room'],
-  },
-  {
-    id: 2,
-    name: 'Elliot',
-    email: 'elliot_P@gmail.com',
-    favoriteMovies: ['Juno'],
-  },
-];
-
-let movies = [
-  {
-    Title: 'Titanic',
-    Description:
-      'A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.',
-    Genre: {
-      Name: 'Drama',
-      Description:
-        'The drama genre is a broad category that features stories portraying human experiences, emotions, conflicts, and relationships in a realistic and emotionally impactful way.',
-    },
-    Director: {
-      Name: 'James Cameron',
-      Bio: 'James Francis Cameron was born on August 16, 1954 in Kapuskasing, Ontario, Canada. He moved to the United States in 1971. The son of an engineer, he majored in physics at California State University before switching to English, and eventually dropping out. He then drove a truck to support his screenwriting ambition.',
-      Birth: 1954,
-    },
-    imgURL:
-      'https://resizing.flixster.com/JBp0dumCJw-ln_HfI4rqvXOagG4=/206x305/v2/https://resizing.flixster.com/j1q6PHK0ZtbdABMQcflU-wH5-eE=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzL2Y1NGZmNWMyLTczMGUtNDViMS04NzdmLTRiODZiMDM0YWMwOS5qcGc=',
-  },
-  {
-    Title: 'Moonlight',
-    Description:
-      'A young African-American man grapples with his identity and sexuality while experiencing the everyday struggles of childhood, adolescence, and burgeoning adulthood.',
-    Genre: {
-      Name: 'Drama',
-      Description:
-        'The drama genre is a broad category that features stories portraying human experiences, emotions, conflicts, and relationships in a realistic and emotionally impactful way.',
-    },
-    Director: {
-      Name: 'Barry Jenkins',
-      Bio: 'Barry Jenkins was born on 19 November 1979 in Miami, Florida, USA. He is a producer and director, known for If Beale Street Could Talk (2018), Moonlight (2016) and Aftersun (2022).',
-      Birth: 1979,
-    },
-    imgURL:
-      'https://resizing.flixster.com/JKC4UaZHymnUnqPbhWijwXeMaZk=/206x305/v2/https://resizing.flixster.com/HE1uYAymQPCdYxRQ4SQHAOmKE60=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzQ1MTIzMDlhLWJiMWUtNGVhOS05MjFhLTkyMjVmNDkzNDA5Yi53ZWJw',
-  },
-  {
-    Title: 'The Mask',
-    Description:
-      'Bank clerk Stanley Ipkiss is transformed into a manic superhero when he wears a mysterious mask.',
-    Genre: {
-      Name: 'Comedy',
-      Description:
-        'The comedy genre refers to a category of entertainment that aims to amuse and entertain audiences by using humor, wit, and comedic situations.',
-    },
-    Director: {
-      Name: 'Chuck Russell',
-      Bio: 'Graduating from the University of Illinois, Russell left Chicago to begin work in film production in Los Angeles. He worked his way up, assistant directing and production managing independent films while writing screenplays.',
-      Birth: 1958,
-    },
-    imgURL:
-      'https://resizing.flixster.com/QaRTdvdYQrRFod-m17HTMGAfG64=/206x305/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p15854_p_v13_al.jpg',
-  },
-
-  {
-    Title: 'Alien',
-    Description:
-      'After investigating a mysterious transmission of unknown origin, the crew of a commercial spacecraft encounters a deadly lifeform.',
-    Genre: {
-      Name: 'Sci-Fi',
-      Description:
-        'The sci-fi genre, short for science fiction, features imaginative and futuristic concepts that are often rooted in scientific principles, technology, and possibilities. ',
-    },
-    Director: {
-      Name: 'Ridley Scott',
-      Bio: 'Described by film producer Michael Deeley as "the very best eye in the business", director Ridley Scott was born on November 30, 1937 in South Shields, Tyne and Wear. His father was an officer in the Royal Engineers and the family followed him as his career posted him throughout the United Kingdom and Europe before they eventually returned to Teesside.',
-      Birth: 1937,
-    },
-    imgURL:
-      'https://resizing.flixster.com/5R4bkJZC-W_K-YjmIMKAXCbts5Y=/206x305/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p2571_p_v8_aw.jpg',
-  },
-
-  {
-    Title: 'In the Mood for Love',
-    Description:
-      'Two neighbors form a strong bond after both suspect extramarital activities of their spouses. However, they agree to keep their bond platonic so as not to commit similar wrongs.',
-    Genre: {
-      Name: 'Dark Romance',
-      Description:
-        'The dark romance subgenre features themes of love, desire, and relationships within a context that is often intense, mysterious, and sometimes unsettling.',
-    },
-    Director: {
-      Name: 'Wong Kar-Wai',
-      Bio: 'Described by film producer Michael Deeley as "the very best eye in the business", director Ridley Scott was born on November 30, 1937 in South Shields, Tyne and Wear. His father was an officer in the Royal Engineers and the family followed him as his career posted him throughout the United Kingdom and Europe before they eventually returned to Teesside.',
-      Birth: 1956,
-    },
-    imgURL:
-      'https://resizing.flixster.com/ClQ3aL-8ksjZE_I_yKxX9kRjO7M=/206x305/v2/https://resizing.flixster.com/JiKhYY6ezF5gebJkR2gPLMBq3lI=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzQ5MGE5YWJlLTAzMzgtNGRmOC1iMWQ1LTlhZjFjYjg3MmY3ZS5qcGc=',
-  },
-];
-
-// 5. CREATE user
-app.post('/users', (req, res) => {
-  const newUser = req.body;
-
-  if (newUser.name) {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser);
-  } else {
-    res.status(400).send('A name is required');
-  }
+mongoose.connect('mongodb://localhost:27017/movieDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-// 6. UPDATE user data
-app.put('/users/:id', (req, res) => {
-  const { id } = req.params;
-  const updatedUser = req.body;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    user.name = updatedUser.name;
-    res.status(200).json(user);
-  } else {
-    res.status(400).send('This user does not exist');
-  }
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to movieDB');
 });
 
-// 7. UPDATE new favorite movie
-app.put('/users/:id/:movieTitle', (req, res) => {
-  const { id, movieTitle } = req.params;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    if (!user.favoriteMovies.includes(movieTitle)) {
-      user.favoriteMovies.push(movieTitle);
-      res
-        .status(200)
-        .send(`${movieTitle} has been added to user ${id}'s array`);
-    } else {
-      res
-        .status(400)
-        .send("This movie is already in the user's favorites list.");
-    }
-  } else {
-    res.status(400).send('This user does not exist');
-  }
+mongoose.connection.on('error', (err) => {
+  console.error(`Mongoose connection error: ${err}`);
 });
 
-// 8. DELETE favorite movie
-app.delete('/users/:id/:movieTitle', (req, res) => {
-  const { id, movieTitle } = req.params;
+// CREATE user || verified
+app.post('/users', async (req, res) => {
+  await User.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exists');
+      } else {
+        User.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((user) => {
+            res.status(201).json(user);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
-  let user = users.find((user) => user.id == id);
+// UPDATE user data || verified
+app.put('/users/:Username', async (req, res) => {
+  await User.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      },
+    },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-  if (user) {
-    user.favoriteMovies = user.favoriteMovies.filter(
-      (title) => title !== movieTitle
+// Add a movie to a user's list of favorites || verified
+app.put('/users/:Username/movies/:MovieID', async (req, res) => {
+  await User.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $push: { FavoriteMovies: req.params.MovieID },
+    },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// 8. DELETE favorite movie || verified
+app.delete('/users/:id/movies/:MovieID', async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { FavoriteMovies: req.params.MovieID } },
+      { new: true }
     );
+
+    if (!updatedUser) {
+      return res.status(404).send('User not found');
+    }
+
     res
       .status(200)
-      .send(`${movieTitle} has been removed from user ${id}'s array`);
-  } else {
-    res.status(400).send('This user does not exist');
+      .send(
+        `Movie with ID ${req.params.MovieID} was removed from user's favorites.`
+      );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
   }
 });
 
-// 9. DELETE user
-app.delete('/users/:id', (req, res) => {
-  const { id } = req.params;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    users = users.filter((user) => user.id != id);
-    res.status(200).send(`User ${id} has been deleted`);
-  } else {
-    res.status(400).send('This user does not exist');
-  }
+// Delete a user by username
+app.delete('/users/:Username', async (req, res) => {
+  await User.findOneAndDelete({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.Username + ' was not found');
+      } else {
+        res.status(200).send(req.params.Username + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-// 1. READ all movies
+// READ all movies || verified
 app.get('/movies', (req, res) => {
-  res.status(200).json(movies);
+  Movie.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-// 2. READ data about a single movie
-app.get('/movies/:title', (req, res) => {
-  const { title } = req.params;
-  const movie = movies.find((movie) => movie.Title === title);
-  if (movie) {
-    return res.status(200).json(movie);
-  } else {
-    res.status(400).send('This movie does not exist');
-  }
+// Get a movie by title || verified
+app.get('/movies/:Title', async (req, res) => {
+  await Movie.findOne({ Title: req.params.Title })
+    .then((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-// 3. READ data about a genre
-app.get('/movies/genre/:genreName', (req, res) => {
-  const { genreName } = req.params;
-  const movie = movies.find((movie) => movie.Genre.Name === genreName);
-  if (movie) {
-    return res.status(200).json(movie.Genre);
-  } else {
-    res.status(400).send('This genre does not exist');
-  }
+// READ all genres || verified
+app.get('/genres', (req, res) => {
+  Genre.find()
+    .then((genres) => {
+      res.status(201).json(genres);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-// 4. READ data about a director
-app.get('/movies/directors/:directorName', (req, res) => {
-  const { directorName } = req.params;
-  const movie = movies.find((movie) => movie.Director.Name === directorName);
-  if (movie) {
-    return res.status(200).json(movie.Director);
-  } else {
-    res.status(400).send('This genre does not exist');
-  }
+// READ data about a genre || verified
+app.get('/movies/genres/:Name', async (req, res) => {
+  await Genre.findOne({ Name: req.params.Name })
+    .then((genre) => {
+      res.json(genre);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// READ all directors || verified
+app.get('/directors', (req, res) => {
+  Director.find()
+    .then((directors) => {
+      res.status(201).json(directors);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// READ data about a director by name || verified
+app.get('/directors/:Name', async (req, res) => {
+  await Director.findOne({ Name: req.params.Name })
+    .then((director) => {
+      res.json(director);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// Get a user by username || verified
+app.get('/users/:Username', async (req, res) => {
+  await User.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// Update a user's info, by username
+app.put('/users/:Username', async (req, res) => {
+  await User.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      },
+    },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+// READ all users || verified
+app.get('/users', (req, res) => {
+  User.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+app.get('/', (req, res) => {
+  res.send('Welcome to MyFlix!');
 });
 
 app.listen(8080, () => {
