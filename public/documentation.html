@@ -45,9 +45,9 @@
       </tr>
       <tr>
         <td>Get data about a single movie by its title</td>
-        <td>/movies/:title</td>
+        <td>/movies/:Title</td>
         <td>GET</td>
-        <td>title</td>
+        <td>Title</td>
         <td>None</td>
         <td>
           A JSON object holding data about a single movie, including title,
@@ -55,26 +55,10 @@
         </td>
       </tr>
       <tr>
-        <td>Get movies by genre</td>
-        <td>/movies/genre/:genreId</td>
+        <td>Get data about a genre by name</td>
+        <td>/movies/genres/:Name</td>
         <td>GET</td>
-        <td>genreId</td>
-        <td>None</td>
-        <td>A JSON array of movies that match the specified genre ID.</td>
-      </tr>
-      <tr>
-        <td>Get movies by director</td>
-        <td>/movies/director/:directorId</td>
-        <td>GET</td>
-        <td>directorId</td>
-        <td>None</td>
-        <td>A JSON array of movies directed by the specified director ID.</td>
-      </tr>
-      <tr>
-        <td>Get data about a genre by ID</td>
-        <td>/genres/:genreId</td>
-        <td>GET</td>
-        <td>genreId</td>
+        <td>Name</td>
         <td>None</td>
         <td>
           A JSON object holding data about a genre, including genre name and
@@ -82,10 +66,10 @@
         </td>
       </tr>
       <tr>
-        <td>Get data about a director by ID</td>
-        <td>/directors/:directorId</td>
+        <td>Get data about a director by name</td>
+        <td>/directors/:Name</td>
         <td>GET</td>
-        <td>directorId</td>
+        <td>Name</td>
         <td>None</td>
         <td>
           A JSON object holding data about a director, including name, bio,
@@ -98,55 +82,57 @@
         <td>POST</td>
         <td>n/a</td>
         <td>
-          A JSON object with user details: { "Name": "Leo", "Email":
-          "leodc@gmail.com", "Birthday": "YYYY-MM-DD", "FavoriteMovies": [] }
+          A JSON object with user details: { "Username": "Leo", "Password":
+          "password123", "Email": "leodc@gmail.com", "Birthday": "YYYY-MM-DD" }
         </td>
         <td>
-          A JSON object holding data about the registered user, including: Name,
-          Email, Birthday, FavoriteMovies, and ID.
+          A JSON object holding data about the registered user, including:
+          Username, Email, Birthday, FavoriteMovies, and ID.
         </td>
       </tr>
       <tr>
         <td>Update user's info</td>
-        <td>/users/:userId</td>
+        <td>/users/:Username</td>
         <td>PUT</td>
-        <td>userId</td>
-        <td>A JSON object with updated user details.</td>
+        <td>Username</td>
+        <td>
+          A JSON object with updated user details: { "Username": "Leo",
+          "Password": "newpassword", "Email": "leodc@gmail.com", "Birthday":
+          "YYYY-MM-DD" }
+        </td>
         <td>A JSON object with the updated user details.</td>
       </tr>
       <tr>
         <td>Add a movie to favorite list</td>
-        <td>/users/:userId/favorites/:movieId</td>
+        <td>/users/:Username/movies/:MovieID</td>
         <td>PUT</td>
-        <td>userId, movieId</td>
+        <td>Username, MovieID</td>
         <td>None</td>
         <td>
-          A text message indicating the movie has been added to the favorite
-          list. <br />
-          `${movieId} has been added to user ${userId}'s favorite list`
+          A JSON object of the updated user data, including the updated
+          FavoriteMovies array.
         </td>
       </tr>
       <tr>
         <td>Remove a movie from favorite list</td>
-        <td>/users/:userId/favorites/:movieId</td>
+        <td>/users/:id/movies/:MovieID</td>
         <td>DELETE</td>
-        <td>userId, movieId</td>
+        <td>id, MovieID</td>
         <td>None</td>
         <td>
-          A text message indicating the movie has been removed from the favorite
-          list. <br />
-          `${movieId} has been removed from user ${userId}'s favorite list`
+          A JSON object of the updated user data, excluding the removed MovieID
+          from the FavoriteMovies array.
         </td>
       </tr>
       <tr>
         <td>Deregister existing user</td>
-        <td>/users/:userId</td>
+        <td>/users/:Username</td>
         <td>DELETE</td>
-        <td>userId</td>
+        <td>Username</td>
         <td>None</td>
         <td>
           A text message indicating the user has been deregistered. <br />
-          `User ${userId} has been deleted`
+          `User ${Username} has been deleted`
         </td>
       </tr>
     </table>
