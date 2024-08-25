@@ -106,21 +106,36 @@ app.post(
 // UPDATE user data
 app.put(
   '/users/:Username',
+  // Validation logic here for request
+  [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check(
+      'Username',
+      'Username contains non alphanumeric characters - not allowed.'
+    ).isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail(),
+  ],
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // CONDITION TO CHECK ADDED HERE
     if (req.user.Username !== req.params.Username) {
       return res.status(400).send('Permission denied');
     }
+    // Hash password if it is being updated
+    let updateData = req.body;
+    if (updateData.Password) {
+      updateData.Password = User.hashPassword(updateData.Password);
+    }
     // CONDITION ENDS
     await User.findOneAndUpdate(
       { Username: req.params.Username },
       {
         $set: {
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday,
+          Username: updateData.Username,
+          Password: updateData.Password,
+          Email: updateData.Email,
+          Birthday: updateData.Birthday,
         },
       },
       { new: true }
