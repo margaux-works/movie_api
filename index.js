@@ -11,7 +11,10 @@ const app = express();
 const { check, validationResult } = require('express-validator');
 
 // CORS to update
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = [
+  'http://localhost:8080',
+  'https://movies-app2024-74d588eb4f3d.herokuapp.com/',
+];
 
 app.use(
   cors({
@@ -35,7 +38,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 let auth = require('./auth.js')(app);
 
-mongoose.connect('mongodb://localhost:27017/movieDB', {
+// mongoose.connect('mongodb://localhost:27017/movieDB', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
