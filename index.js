@@ -108,33 +108,39 @@ app.put(
   '/users/:Username',
   // Validation logic here for request
   [
-    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username must be at least 5 characters long')
+      .optional()
+      .isLength({ min: 5 }),
     check(
       'Username',
-      'Username contains non alphanumeric characters - not allowed.'
-    ).isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail(),
+      'Username contains non-alphanumeric characters - not allowed.'
+    )
+      .optional()
+      .isAlphanumeric(),
+    check('Password', 'Password is required').optional().not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').optional().isEmail(),
   ],
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // CONDITION TO CHECK ADDED HERE
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     if (req.user.Username !== req.params.Username) {
       return res.status(400).send('Permission denied');
     }
-    const updatedUser = {
-      Username: req.body.Username,
-      Email: req.body.Email,
-      Birthday: req.body.Birthday,
-    };
+    const updateData = {};
+    if (req.body.Username) updateData.Username = req.body.Username;
+    if (req.body.Email) updateData.Email = req.body.Email;
+    if (req.body.Birthday) updateData.Birthday = req.body.Birthday;
+    if (req.body.Password)
+      updateData.Password = User.hashPassword(req.body.Password);
 
-    if (req.body.Password) {
-      updatedUser.Password = User.hashPassword(req.body.Password);
-    }
     // Condition ends
     await User.findOneAndUpdate(
       { Username: req.params.Username },
-      { $set: updatedUser },
+      { $set: updateData },
       { new: true }
     )
       .then((updatedUser) => {
