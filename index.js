@@ -122,22 +122,19 @@ app.put(
     if (req.user.Username !== req.params.Username) {
       return res.status(400).send('Permission denied');
     }
-    // Hash password if it is being updated
-    let updateData = req.body;
-    if (updateData.Password) {
-      updateData.Password = User.hashPassword(updateData.Password);
+    const updatedUser = {
+      Username: req.body.Username,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday,
+    };
+
+    if (req.body.Password) {
+      updatedUser.Password = User.hashPassword(req.body.Password);
     }
-    // CONDITION ENDS
+    // Condition ends
     await User.findOneAndUpdate(
       { Username: req.params.Username },
-      {
-        $set: {
-          Username: updateData.Username,
-          Password: updateData.Password,
-          Email: updateData.Email,
-          Birthday: updateData.Birthday,
-        },
-      },
+      { $set: updatedUser },
       { new: true }
     )
       .then((updatedUser) => {
