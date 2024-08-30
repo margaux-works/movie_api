@@ -177,7 +177,7 @@ app.put(
 
 // 8. DELETE favorite movie
 app.delete(
-  '/users/:id/movies/:MovieID',
+  '/users/:Username/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
