@@ -181,7 +181,7 @@ app.delete(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const updatedUser = await User.findByIdAndUpdate(
+      const updatedUser = await User.findOneAndUpdate(
         req.params.id,
         { $pull: { FavoriteMovies: req.params.MovieID } },
         { new: true }
