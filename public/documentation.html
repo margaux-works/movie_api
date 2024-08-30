@@ -82,8 +82,11 @@
         <td>POST</td>
         <td>n/a</td>
         <td>
-          A JSON object with user details: { "Username": "Leo", "Password":
-          "password123", "Email": "leodc@gmail.com", "Birthday": "YYYY-MM-DD" }
+          A JSON object with user details: <br />
+          { "Username": "Leo", <br />
+          "Password": "password123", <br />
+          "Email": "leodc@gmail.com", <br />
+          "Birthday": "YYYY-MM-DD" }
         </td>
         <td>
           A JSON object holding data about the registered user, including:
@@ -96,9 +99,13 @@
         <td>PUT</td>
         <td>Username</td>
         <td>
-          A JSON object with updated user details: { "Username": "Leo",
-          "Password": "newpassword", "Email": "leodc@gmail.com", "Birthday":
-          "YYYY-MM-DD" }
+          A JSON object with updated user details:<br />
+          { "Username": "Leo", <br />
+          "Password": "newpassword", <br />
+          "Email": "leodc@gmail.com", <br />
+          "Birthday": "YYYY-MM-DD" } <br />
+          **Note:** The Username in the URL must match the currently
+          authenticated user.
         </td>
         <td>A JSON object with the updated user details.</td>
       </tr>
@@ -115,13 +122,14 @@
       </tr>
       <tr>
         <td>Remove a movie from favorite list</td>
-        <td>/users/:id/movies/:MovieID</td>
+        <td>/users/:Username/movies/:MovieID</td>
         <td>DELETE</td>
         <td>id, MovieID</td>
         <td>None</td>
         <td>
-          A JSON object of the updated user data, excluding the removed MovieID
-          from the FavoriteMovies array.
+          A message indicating that the movie has been removed from the user's
+          favorites. `Movie with ID ${MovieID} was removed from user's
+          favorites.`
         </td>
       </tr>
       <tr>
