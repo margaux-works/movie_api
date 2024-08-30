@@ -367,3 +367,11 @@ const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on Port' + port);
 });
+
+// Serve static files from the 'public' directory
+app.use(express.static('public'));
+
+// Serve the documentation HTML file at /documentation
+app.get('/documentation', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
+});
