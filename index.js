@@ -180,7 +180,7 @@ app.delete(
   async (req, res) => {
     try {
       const updatedUser = await User.findOneAndUpdate(
-        req.params.Username,
+        { Username: req.params.Username },
         { $pull: { FavoriteMovies: req.params.MovieID } },
         { new: true }
       );
