@@ -227,20 +227,16 @@ app.delete(
 );
 
 // READ all movies
-app.get(
-  '/movies',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    await Movie.find()
-      .then((movies) => {
-        res.status(200).json(movies);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  }
-);
+app.get('/movies', async (req, res) => {
+  await Movie.find()
+    .then((movies) => {
+      res.status(200).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
 // Get a movie by title
 app.get(
