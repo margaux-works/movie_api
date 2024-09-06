@@ -4,8 +4,16 @@ const mongoose = require('mongoose'),
 let movieSchema = mongoose.Schema({
   Title: { type: String, required: true },
   Description: { type: String, required: true },
-  Genre: { type: String, required: true },
-  Director: { type: String, required: true },
+  Genre: {
+    Name: { type: String, required: true },
+    Description: { type: String, required: true },
+  },
+  Director: {
+    Name: { type: String, required: true },
+    Bio: { type: String, required: true },
+    Birth: { type: String, required: true },
+    Date: { type: String },
+  },
   ImagePath: String,
   Featured: Boolean,
 });
