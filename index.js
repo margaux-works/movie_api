@@ -263,13 +263,14 @@ app.get(
   '/movies/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log('Fetching movie with ID:', req.params.id);
+    console.log('Endpoint hit: Fetching movie with ID:', req.params.id); // Log here
     await Movie.findOne({ _id: req.params.id.toString() })
       .then((movie) => {
+        console.log('Movie found:', movie); // Log here
         res.json(movie);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Error fetching movie:', err); // Log here
         res.status(500).send('Error: ' + err);
       });
   }
