@@ -10,10 +10,6 @@ require('./passport.js');
 const app = express();
 const { check, validationResult } = require('express-validator');
 
-const morgan = require('morgan');
-const logFormat = 'dev';
-app.use(morgan(logFormat));
-
 // restricted origins
 // let allowedOrigins = [
 //   'http://localhost:8080',
@@ -267,9 +263,7 @@ app.get(
   '/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log('Fetching movie with ID:', req.params.MovieID);
-
-    await Movie.findById(req.params.MovieID)
+    await Movie.findById({ _id: req.params.MovieID })
       .then((movie) => {
         res.json(movie);
       })
