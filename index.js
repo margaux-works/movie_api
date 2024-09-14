@@ -264,13 +264,9 @@ app.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     console.log('Fetching movie with ID:', req.params.MovieID);
-    const movieID = mongoose.Types.ObjectId(req.params.MovieID);
 
-    await Movie.findById(movieID)
+    await Movie.findById(req.params.MovieID)
       .then((movie) => {
-        if (!movie) {
-          return res.status(404).send('Movie not found');
-        }
         res.json(movie);
       })
       .catch((err) => {
