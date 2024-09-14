@@ -264,15 +264,18 @@ app.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     console.log('Fetching movie with ID:', req.params.MovieID);
-
-    await Movie.findById(req.params.MovieID)
-      .then((movie) => {
-        res.json(movie);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
+    try {
+      const movie = await Movie.findById(
+        mongoose.Types.ObjectId(req.params.MovieID)
+      );
+      if (!movie) {
+        return res.status(404).send('Movie not found');
+      }
+      res.json(movie);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    }
   }
 );
 
