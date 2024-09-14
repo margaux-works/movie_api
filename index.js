@@ -263,8 +263,8 @@ app.get(
   '/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log('Endpoint hit: Fetching movie with ID:', req.params.id); // Log here
-    await Movie.findOne({ _id: req.params.id.toString() })
+    console.log('Endpoint hit: Fetching movie with ID:', req.params.MovieID); // Log here
+    await Movie.findOne({ _id: req.params.MovieID.toString() })
       .then((movie) => {
         console.log('Movie found:', movie); // Log here
         res.json(movie);
