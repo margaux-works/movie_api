@@ -264,8 +264,8 @@ app.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     await Movie.findOne({ _id: req.params.MovieID })
-      .then((movie) => {
-        res.json(movie);
+      .then((movies) => {
+        res.json(movies);
       })
       .catch((err) => {
         console.error(err);
