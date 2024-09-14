@@ -260,7 +260,7 @@ app.get(
 
 // Get a movie by ID
 app.get(
-  '/movies/:id',
+  '/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     console.log('Endpoint hit: Fetching movie with ID:', req.params.id); // Log here
