@@ -263,14 +263,18 @@ app.get(
   '/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log('Endpoint hit: Fetching movie with ID:', req.params.MovieID); // Log here
-    await Movie.findOne({ _id: req.params.MovieID.toString() })
+    console.log('Fetching movie with ID:', req.params.MovieID);
+    const movieID = mongoose.Types.ObjectId(req.params.MovieID);
+
+    await Movie.findById(movieID)
       .then((movie) => {
-        console.log('Movie found:', movie); // Log here
+        if (!movie) {
+          return res.status(404).send('Movie not found');
+        }
         res.json(movie);
       })
       .catch((err) => {
-        console.error('Error fetching movie:', err); // Log here
+        console.error(err);
         res.status(500).send('Error: ' + err);
       });
   }
