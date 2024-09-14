@@ -9,11 +9,10 @@ const passport = require('passport');
 require('./passport.js');
 const app = express();
 const { check, validationResult } = require('express-validator');
-const morgan = require('morgan');
-const logLevel = process.env.LOG_LEVEL || 'combined'; // Default to 'combined' if not set
 
-// Configure Morgan with dynamic log level
-app.use(morgan(logLevel));
+const morgan = require('morgan');
+const logFormat = 'dev';
+app.use(morgan(logFormat));
 
 // restricted origins
 // let allowedOrigins = [
