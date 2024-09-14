@@ -260,12 +260,12 @@ app.get(
 
 // Get a movie by ID
 app.get(
-  '/movies/:MovieID',
+  '/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     await Movie.findOne({ _id: req.params.MovieID })
-      .then((movies) => {
-        res.json(movies);
+      .then((movie) => {
+        res.json(movie);
       })
       .catch((err) => {
         console.error(err);
