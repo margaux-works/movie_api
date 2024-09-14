@@ -9,6 +9,11 @@ const passport = require('passport');
 require('./passport.js');
 const app = express();
 const { check, validationResult } = require('express-validator');
+const morgan = require('morgan');
+const logLevel = process.env.LOG_LEVEL || 'combined'; // Default to 'combined' if not set
+
+// Configure Morgan with dynamic log level
+app.use(morgan(logLevel));
 
 // restricted origins
 // let allowedOrigins = [
@@ -264,18 +269,15 @@ app.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     console.log('Fetching movie with ID:', req.params.MovieID);
-    try {
-      const movie = await Movie.findById(
-        mongoose.Types.ObjectId(req.params.MovieID)
-      );
-      if (!movie) {
-        return res.status(404).send('Movie not found');
-      }
-      res.json(movie);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    }
+
+    await Movie.findById(req.params.MovieID)
+      .then((movie) => {
+        res.json(movie);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
   }
 );
 
