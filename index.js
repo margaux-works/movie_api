@@ -156,7 +156,7 @@ app.put(
   '/users/:Username/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // Check if the movie is already a favorite
+    // Check if user exists
     const user = await User.findOne({ Username: req.params.Username });
     if (!user) return res.status(404).send('User not found');
 
