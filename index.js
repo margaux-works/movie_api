@@ -198,11 +198,7 @@ app.delete(
         return res.status(404).send('User not found');
       }
 
-      res
-        .status(200)
-        .send(
-          `Movie with ID ${req.params.MovieID} was removed from user's favorites.`
-        );
+      res.json(updatedUser);
     } catch (err) {
       console.error(err);
       res.status(500).send('Error: ' + err);
