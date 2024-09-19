@@ -14,7 +14,7 @@ const { check, validationResult } = require('express-validator');
 let allowedOrigins = [
   'http://localhost:8080',
   'https://movies-app2024-74d588eb4f3d.herokuapp.com/',
-  'https://margauxflix.netlify.app/',
+  'https://margauxflix.netlify.app',
 ];
 
 app.use(
