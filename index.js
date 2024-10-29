@@ -152,9 +152,6 @@ app.put(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    if (req.user.Username !== req.params.Username) {
-      return res.status(400).send('Permission denied');
-    }
     const updateData = {};
     if (req.body.Username) updateData.Username = req.body.Username;
     if (req.body.Email) updateData.Email = req.body.Email;
