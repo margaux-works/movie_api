@@ -2,6 +2,8 @@
 
 The **myFlix API** is a RESTful web service that provides access to a comprehensive database of movies, directors, and genres. It also includes user management features, allowing for user registration, profile updates, and management of favorite movies.
 
+This API is used as the backend for the [myFlix-React](https://github.com/margaux-works/myFlix-React) and [myFlix-Angular](https://github.com/margaux-works/myFlix-Angular) front-end applications. These repositories provide user interfaces for interacting with the movie database.
+
 ## Features
 
 - Movie Information
